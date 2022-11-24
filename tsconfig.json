@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "moduleResolution": "node",
+    "types": ["@pubnub/tomato"]
+  },
+  "include": ["contracts", "utils"]
+}
