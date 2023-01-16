@@ -1,4 +1,6 @@
-import * as Router from 'find-my-way'
+import * as FMWRouter from 'find-my-way'
+
+import type { ExpectInterface } from '@pubnub/tomato'
 
 type RouteHandler = (
   req: {
@@ -24,24 +26,43 @@ type Routes = {
   [k: string]: RouteHandler
 }
 
-export function router(expect: any, routes: Routes) {
-  const router = Router()
+export class Router {
+  private _fwm: FMWRouter.Instance<FMWRouter.HTTPVersion.V1>
+  private routes: Record<string, RouteHandler> = {}
 
-  for (const [key, handler] of Object.entries(routes)) {
-    const [method, path] = key.split(' ')
-
-    router.on(method.toUpperCase() as Router.HTTPMethod, path, handler as any)
+  constructor(private expect: ExpectInterface) {
+    this._fwm = FMWRouter()
   }
 
-  return async function () {
+  get(path: string, handler: RouteHandler) {
+    this.routes[`GET ${path}`] = handler
+  }
+
+  post(path: string, handler: RouteHandler) {
+    this.routes[`POST ${path}`] = handler
+  }
+
+  async run() {
+    for (const [key, handler] of Object.entries(this.routes)) {
+      const [method, path] = key.split(' ')
+
+      this._fwm.on(
+        method.toUpperCase() as FMWRouter.HTTPMethod,
+        path,
+        handler as any
+      )
+    }
+
+    console.log('running')
+
     while (true) {
-      const request = await expect({
+      const request = await this.expect({
         description: 'any request',
         validations: [],
       })
 
-      const route = router.find(
-        request.method.toUpperCase() as Router.HTTPMethod,
+      const route = this._fwm.find(
+        request.method.toUpperCase() as FMWRouter.HTTPMethod,
         request.url.path
       )
 

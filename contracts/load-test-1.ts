@@ -48,9 +48,6 @@ function generateEnvelopes(startTimetoken: string, amount: number) {
   return result
 }
 
-const sleep = (delay: number) =>
-  new Promise((resolve) => setTimeout(resolve, delay))
-
 export default async function () {
   let currentTimetoken = timetoken.now()
 

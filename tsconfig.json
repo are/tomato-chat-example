@@ -2,7 +2,9 @@
   "compilerOptions": {
     "target": "ESNext",
     "moduleResolution": "node",
-    "types": ["@pubnub/tomato"]
+    "types": ["@pubnub/tomato"],
+
+    "lib": ["ES2022"]
   },
   "include": ["contracts", "utils"]
 }

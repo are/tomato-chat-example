@@ -1,7 +1,9 @@
 import Pubnub from 'pubnub/dist/web/pubnub'
 
 async function main() {
-  await fetch('http://localhost:8090/init?__contract__script__=loadTest')
+  await fetch(
+    'http://localhost:8090/init?__contract__script__=loadTest&subscribeKey=demo&channel=demo&chunksPerSecond=4&messagesPerChunk=100&users=5&avatarType=0'
+  )
 
   const pubnub = new Pubnub({
     origin: 'localhost:8090',
